@@ -16,8 +16,8 @@ impl std::error::Error for TicketNewError {}
 impl Display for TicketNewError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            TicketNewError::TitleError(error) => write!(f, "{}", error),
-            TicketNewError::DescriptionError(error) => write!(f, "{}", error),
+            TicketNewError::TitleError(error) => write!(f, "{error}"),
+            TicketNewError::DescriptionError(error) => write!(f, "{error}"),
         }
     }
 }
