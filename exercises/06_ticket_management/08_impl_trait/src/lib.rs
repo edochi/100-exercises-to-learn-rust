@@ -14,6 +14,22 @@ pub struct Ticket {
     pub status: Status,
 }
 
+// impl<'a> TicketStore {
+//     pub fn iter(&'a self) -> std::slice::Iter<'a, Ticket> {
+//         self.tickets.iter()
+//     }
+// }
+
+impl TicketStore {
+    fn iter(&self) -> std::slice::Iter<'_, Ticket> {
+        self.tickets.iter()
+    }
+
+    pub fn in_progress(&self) -> impl Iterator<Item = &Ticket> {
+        self.iter().filter(|t| t.status == Status::InProgress)
+    }
+}
+
 #[derive(Clone, Debug, Copy, PartialEq)]
 pub enum Status {
     ToDo,
