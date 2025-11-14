@@ -13,7 +13,7 @@ pub struct TicketStore {
     tickets: Vec<Ticket>,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct TicketId(u64);
 
 #[derive(Clone, Debug, PartialEq)]
@@ -44,8 +44,32 @@ impl TicketStore {
         }
     }
 
-    pub fn add_ticket(&mut self, ticket: Ticket) {
-        self.tickets.push(ticket);
+    pub fn iter(&self) -> std::slice::Iter<'_, Ticket> {
+        self.tickets.iter()
+    }
+
+    pub fn get_max_ticket_id(&self) -> u64 {
+        // self.iter().map(|&x| x.id.0).collect().max()
+        self.iter()
+            .max_by_key(|ticket| ticket.id)
+            .map(|ticket| ticket.id.0)
+            .unwrap_or(0)
+    }
+
+    pub fn add_ticket(&mut self, ticket: TicketDraft) -> TicketId {
+        let ticket_id = TicketId(self.get_max_ticket_id() + 1);
+        let ticket_complete = Ticket {
+            id: ticket_id.clone(),
+            title: ticket.title,
+            description: ticket.description,
+            status: Status::ToDo,
+        };
+        self.tickets.push(ticket_complete);
+        ticket_id
+    }
+
+    pub fn get(&self, ticket_id: TicketId) -> Option<&Ticket> {
+        self.iter().find(|ticket| ticket.id == ticket_id)
     }
 }
 
