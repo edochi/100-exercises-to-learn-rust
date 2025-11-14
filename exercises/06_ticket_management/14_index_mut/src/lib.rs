@@ -90,6 +90,7 @@ impl IndexMut<&TicketId> for TicketStore {
         //     .iter_mut()
         //     .find(|ticket| ticket.id == *index)
         //     .unwrap()
+        // self.index_mut(*index)
         &mut self[*index]
     }
 }
