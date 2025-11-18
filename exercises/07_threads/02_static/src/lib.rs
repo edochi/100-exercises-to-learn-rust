@@ -4,10 +4,14 @@
 use std::thread;
 
 pub fn sum(slice: &'static [i32]) -> i32 {
-    // let (slice_l, slice_r) = slice.split_at_mut(slice.len() / 2);
+    let mid = slice.len() / 2;
+    let (slice1, slice2) = slice.split_at(mid);
 
-    let handle_l = thread::spawn(|| slice[..slice.len()].iter().sum::<i32>());
-    let handle_r = thread::spawn(|| slice[slice.len()..].iter().sum::<i32>());
+    let handle_l = thread::spawn(|| slice1.iter().sum::<i32>());
+    let handle_r = thread::spawn(|| slice2.iter().sum::<i32>());
+
+    // let handle_l = thread::spawn(|| slice[..slice.len() / 2].iter().sum::<i32>());
+    // let handle_r = thread::spawn(|| slice[slice.len() / 2..].iter().sum::<i32>());
 
     handle_l.join().unwrap() + handle_r.join().unwrap()
 }
